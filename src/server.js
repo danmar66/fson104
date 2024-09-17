@@ -7,6 +7,7 @@ import {
   notFoundMiddleware,
   errorHandlerMiddleware,
 } from './middlewares/index.js';
+import { studentService } from './services/index.js';
 
 const PORT = Number(env(ENV_VARS.PORT, '3000'));
 
@@ -27,6 +28,24 @@ export const startServer = () => {
   app.get('/', (req, res) => {
     res.json({
       message: 'Hello, World!',
+    });
+  });
+
+  app.get('/students', async (req, res) => {
+    const students = await studentService.getAllStudents();
+
+    res.status(200).json({
+      students,
+    });
+  });
+
+  app.get('/students/:studentId', async (req, res) => {
+    const { studentId } = req.params;
+
+    const student = await studentService.getStudentsById(studentId);
+
+    res.status(200).json({
+      student,
     });
   });
 
